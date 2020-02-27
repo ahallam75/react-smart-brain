@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import Particles from "react-particles-js";
 import Clarifai from "clarifai";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import Particles from "react-particles-js";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -10,7 +10,7 @@ import "./App.css";
 
 //You must add your own API key here from Clarifai.
 const app = new Clarifai.App({
-  apiKey: "4708d1ac3db146e4a0b715b809337f75" // "YOUR_API_HERE"
+  apiKey:  // "YOUR_API_HERE"
 });
 
 const particlesOptions = {
@@ -39,6 +39,7 @@ class App extends Component {
   }
 
   calculateFaceLocation = data => {
+    console.log("This is the console.log for data:", data);
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById("inputimage");
@@ -53,6 +54,7 @@ class App extends Component {
   };
 
   displayFaceBox = box => {
+    console.log("This is the console.log for box", box);
     this.setState({ box: box });
   };
 
@@ -64,9 +66,15 @@ class App extends Component {
     this.setState({ imageUrl: this.state.input });
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response =>
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      )
+      .then(response => {
+        console.log("This is the console.log for response", response);
+        console.log(
+          "This is the console.log for response.outputs[0].data.regions[0].region_info.bounding_box",
+          response.outputs[0].data.regions[0].region_info.bounding_box
+        );
+
+        this.displayFaceBox(this.calculateFaceLocation(response));
+      })
       .catch(err => console.log(err));
   };
 
